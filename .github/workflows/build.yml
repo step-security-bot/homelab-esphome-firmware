@@ -13,7 +13,6 @@ jobs:
     name: Build Firmware
     strategy:
       matrix:
-        esphome-version: ["2023.5.5"]
         python-version: ["3.9"]
 
     steps:
@@ -38,9 +37,13 @@ jobs:
           CLOUDSDK_CORE_PROJECT: "${{ secrets.CLOUDSDK_CORE_PROJECT }}"
           GOOGLE_CREDENTIALS: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}"
 
+      - uses: docker/build-push-action@v4
+        with:
+          tags: builder:latest
+          push: false
       - uses: addnab/docker-run-action@v3
         with:
-          image: esphome/esphome:${{ matrix.esphome-version }}
+          image: builder:latest
           options: -v ${{ github.workspace }}:/workspace
           run: |
             cd /workspace

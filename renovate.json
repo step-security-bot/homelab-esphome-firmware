@@ -11,12 +11,19 @@
         "main"
     ],
     "enabledManagers": [
-        "github-actions"
+        "github-actions",
+        "dockerfile"
     ],
     "github-actions": {
         "fileMatch": [
             "^(workflow-templates|\\.github/workflows)/[^/]+\\.ya?ml$",
             "(^|/)action\\.ya?ml$"
+        ]
+    },
+    "dockerfile": {
+        "fileMatch": [
+            "(^|/|\\.)([Dd]ocker|[Cc]ontainer)file$",
+            "(^|/)([Dd]ocker|[Cc]ontainer)file[^/]*$"
         ]
     }
 }
