@@ -1,0 +1,41 @@
+---
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build Firmware
+    strategy:
+      matrix:
+        esphome-version: ["2023.5.5"]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: mdgreenwald/mozilla-sops-action@v1.4.1
+
+      - run: |
+          ./scripts/secrets_crypter.sh d
+        env:
+          CLOUDSDK_COMPUTE_REGION: "${{ secrets.CLOUDSDK_COMPUTE_REGION }}"
+          CLOUDSDK_CORE_PROJECT: "${{ secrets.CLOUDSDK_CORE_PROJECT }}"
+          GOOGLE_CREDENTIALS: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}"
+
+      - uses: addnab/docker-run-action@v3
+        with:
+          image: esphome/esphome:${{ matrix.esphome-version }}
+          options: -v ${{ github.workspace }}:/workspace
+          run: |
+            cd /workspace
+            ./scripts/build_firmware.sh
+
+# TODO: upload firmware
+# TODO: can we create the config files automatically?
