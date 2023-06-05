@@ -37,5 +37,10 @@ jobs:
             cd /workspace
             ./scripts/build_firmware.sh
 
-# TODO: upload firmware
+      - run: |
+          ./scripts/upload_firmware.sh infrastructure-assets-5274ba70-fde0-47de-8e9a-f1bc64c11157/esphome/firmware
+        env:
+          GCS_ACCESS_KEY_ID: "${{ secrets.GCS_ACCESS_KEY_ID }}"
+          GCS_SECRET_ACCESS_KEY: "${{ secrets.GCS_SECRET_ACCESS_KEY }}"
+
 # TODO: can we create the config files automatically?
