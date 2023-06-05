@@ -14,13 +14,22 @@ jobs:
     strategy:
       matrix:
         esphome-version: ["2023.5.5"]
+        python-version: ["3.9"]
 
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
       - uses: mdgreenwald/mozilla-sops-action@v1.4.1
+
+      - run: |
+          pip install s3cmd --no-cache
 
       - run: |
           ./scripts/secrets_crypter.sh d
@@ -42,5 +51,3 @@ jobs:
         env:
           GCS_ACCESS_KEY_ID: "${{ secrets.GCS_ACCESS_KEY_ID }}"
           GCS_SECRET_ACCESS_KEY: "${{ secrets.GCS_SECRET_ACCESS_KEY }}"
-
-# TODO: can we create the config files automatically?
