@@ -25,7 +25,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - uses: mdgreenwald/mozilla-sops-action@v1.4.1
+      - uses: mdgreenwald/mozilla-sops-action@v1.5.0
 
       - run: |
           pip install s3cmd --no-cache
