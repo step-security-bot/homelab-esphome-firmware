@@ -44,12 +44,15 @@ jobs:
 
       - uses: mdgreenwald/mozilla-sops-action@v1.5.0
 
+      - uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
+
       - run: |
           ./scripts/secrets_crypter.sh d
         env:
           CLOUDSDK_COMPUTE_REGION: "${{ secrets.CLOUDSDK_COMPUTE_REGION }}"
-          CLOUDSDK_CORE_PROJECT: "${{ secrets.CLOUDSDK_CORE_PROJECT }}"
-          GOOGLE_CREDENTIALS: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}"
 
       - uses: docker/build-push-action@v5
         with:

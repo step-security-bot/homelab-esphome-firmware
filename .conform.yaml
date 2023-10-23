@@ -23,7 +23,7 @@ policies:
           - docs
           - no_type
         scopes:
-          - ci
-          - deps
           - release
+          - deps
+          - ci
         descriptionLength: 100
