@@ -1,1 +1,1 @@
-FROM ghcr.io/esphome/esphome:2023.11.3
+FROM ghcr.io/esphome/esphome:2023.11.4
