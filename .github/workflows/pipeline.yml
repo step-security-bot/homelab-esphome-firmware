@@ -48,15 +48,25 @@ jobs:
 
       - uses: mdgreenwald/mozilla-sops-action@v1.6.0
 
+      - uses: hashicorp/vault-action@v3
+        id: import-secrets
+        with:
+          method: jwt
+          url: ${{ secrets.VAULT_ADDR }}
+          path: ${{ secrets.VAULT_PATH }}
+          role: ${{ secrets.VAULT_ROLE }}
+          secrets: |
+            github-homelab-esphome-firmware/data/google-cloud region | CLOUDSDK_COMPUTE_REGION ;
+            github-homelab-esphome-firmware/data/google-cloud workload_identity_provider | GOOGLE_WORKLOAD_IDENTITY_PROVIDER ;
+            github-homelab-esphome-firmware/data/google-cloud ci_service_account | GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT
+
       - uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ env.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
 
       - run: |
           ./scripts/secrets_crypter.sh d
-        env:
-          CLOUDSDK_COMPUTE_REGION: "${{ secrets.CLOUDSDK_COMPUTE_REGION }}"
 
       - uses: docker/build-push-action@v5
         with:

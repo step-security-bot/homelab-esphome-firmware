@@ -31,18 +31,30 @@ jobs:
 
       - uses: mdgreenwald/mozilla-sops-action@v1.6.0
 
+      - uses: hashicorp/vault-action@v3
+        id: import-secrets
+        with:
+          method: jwt
+          url: ${{ secrets.VAULT_ADDR }}
+          path: ${{ secrets.VAULT_PATH }}
+          role: ${{ secrets.VAULT_ROLE }}
+          secrets: |
+            github-homelab-esphome-firmware/data/google-cloud region | CLOUDSDK_COMPUTE_REGION ;
+            github-homelab-esphome-firmware/data/google-cloud workload_identity_provider | GOOGLE_WORKLOAD_IDENTITY_PROVIDER ;
+            github-homelab-esphome-firmware/data/google-cloud ci_service_account | GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT ;
+            github-homelab-esphome-firmware/data/google-cloud-storage access_key_id | GCS_ACCESS_KEY_ID ;
+            github-homelab-esphome-firmware/data/google-cloud-storage secret_access_key | GCS_SECRET_ACCESS_KEY
+
       - uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ env.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
 
       - run: |
           pip install s3cmd --no-cache
 
       - run: |
           ./scripts/secrets_crypter.sh d
-        env:
-          CLOUDSDK_COMPUTE_REGION: "${{ secrets.CLOUDSDK_COMPUTE_REGION }}"
 
       - uses: docker/build-push-action@v5
         with:
@@ -58,6 +70,3 @@ jobs:
 
       - run: |
           ./scripts/upload_firmware.sh infrastructure-assets-5274ba70-fde0-47de-8e9a-f1bc64c11157/esphome/firmware
-        env:
-          GCS_ACCESS_KEY_ID: "${{ secrets.GCS_ACCESS_KEY_ID }}"
-          GCS_SECRET_ACCESS_KEY: "${{ secrets.GCS_SECRET_ACCESS_KEY }}"
