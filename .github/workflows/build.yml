@@ -56,7 +56,7 @@ jobs:
       - run: |
           ./scripts/secrets_crypter.sh d
 
-      - uses: docker/build-push-action@v5
+      - uses: docker/build-push-action@v6
         with:
           tags: builder:latest
           push: false
