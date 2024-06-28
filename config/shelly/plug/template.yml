@@ -58,9 +58,10 @@ api:
     key: ${api_encryption_key}
 
 ota:
-  safe_mode: true
-  num_attempts: 10
-  password: ${password}
+  - platform: esphome
+    safe_mode: true
+    num_attempts: 10
+    password: ${password}
 
 web_server:
   port: 80
