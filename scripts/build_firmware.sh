@@ -13,6 +13,7 @@ while read fname; do
 
   esphome compile ${fname}
   cp ${FIRMWARE_FILE} ${FIRMWARE_FINAL_FILE}
+  gzip ${FIRMWARE_FINAL_FILE}
   
   echo Finished compiling ${fname} to ${FIRMWARE_FINAL_FILE}.
   echo
