@@ -1,1 +1,1 @@
-FROM ghcr.io/esphome/esphome:2024.7.2
+FROM ghcr.io/esphome/esphome:2024.7.3
